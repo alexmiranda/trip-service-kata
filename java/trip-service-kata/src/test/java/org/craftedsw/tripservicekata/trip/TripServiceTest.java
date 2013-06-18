@@ -12,7 +12,15 @@ import org.craftedsw.tripservicekata.user.UserBuilder;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnit44Runner;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnit44Runner.class)
 public class TripServiceTest {
 	
 	private static final User GUEST = null;
@@ -26,14 +34,8 @@ public class TripServiceTest {
 	
 	public User loggedInUser;
 	
-	private TripService tripService;
-	private TripDAO tripDAO;
-	
-	@Before
-	public void initialise() {
-		tripDAO = mock(TripDAO.class);
-		tripService = new TripService(tripDAO );
-	}
+	@Mock private TripDAO tripDAO;
+	@InjectMocks @Spy private TripService tripService = new TripService();
 
 	@Test(expected = UserNotLoggedInException.class)
 	public void should_throw_exception_when_user_is_not_logged_in() throws Exception {
