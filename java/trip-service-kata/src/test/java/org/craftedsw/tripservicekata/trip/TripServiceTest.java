@@ -2,6 +2,7 @@ package org.craftedsw.tripservicekata.trip;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
 
 import java.util.List;
 
@@ -24,11 +25,14 @@ public class TripServiceTest {
 	private static final Trip TO_FLORIPA = new Trip();
 	
 	public User loggedInUser;
-	private TestableTripService tripService;
+	
+	private TripService tripService;
+	private TripDAO tripDAO;
 	
 	@Before
 	public void initialise() {
-		tripService = new TestableTripService();
+		tripDAO = mock(TripDAO.class);
+		tripService = new TripService(tripDAO );
 	}
 
 	@Test(expected = UserNotLoggedInException.class)
@@ -53,15 +57,9 @@ public class TripServiceTest {
 						.withTrips(TO_BELO_HORIZONTE, TO_FLORIPA)
 						.build();
 		
+		when(tripDAO.tripsByUser(user)).thenReturn(user.trips());
+		
 		final List<Trip> friendTrips = tripService.getTripsByUser(user, REGISTRED_USER);
 		assertThat(friendTrips.size(), is(2));
 	}
-	
-	private class TestableTripService extends TripService {		
-		@Override
-		protected List<Trip> tripsBy(User user) {
-			return user.trips();
-		}
-	}
-	
 }
