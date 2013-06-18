@@ -11,5 +11,9 @@ public class TripDAO {
 		throw new DependendClassCallDuringUnitTestException(
 				"TripDAO should not be invoked on an unit test.");
 	}
+
+	public List<Trip> tripsByUser(User user) {
+		return findTripsByUser(user);
+	}
 	
 }
