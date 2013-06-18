@@ -7,7 +7,9 @@ import java.util.List;
 
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.user.User;
+import org.craftedsw.tripservicekata.user.UserBuilder;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TripServiceTest {
@@ -46,11 +48,10 @@ public class TripServiceTest {
 	public void should_return_friend_trips_when_users_are_friends() throws Exception {
 		loggedInUser = REGISTRED_USER;
 		
-		User user = new User();
-		user.addFriend(loggedInUser);
-		user.addFriend(SOMEONE_ELSE);
-		user.addTrip(TO_BELO_HORIZONTE);
-		user.addTrip(TO_FLORIPA);
+		User user = UserBuilder.aUser()
+						.friendWith(loggedInUser, SOMEONE_ELSE)
+						.withTrips(TO_BELO_HORIZONTE, TO_FLORIPA)
+						.build();
 		
 		final List<Trip> friendTrips = tripService.getTripsByUser(user);
 		assertThat(friendTrips.size(), is(2));
